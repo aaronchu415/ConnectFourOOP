@@ -64,8 +64,13 @@ function makeHtmlBoard() {
 
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
-
-  return 0;
+  // looks for null from bottom, if greater than height, then return null
+  for(var i = HEIGHT - 1; i >= 0; i--) {
+    if(board[i][x] === null) {
+      return i;
+    } 
+  }
+  return null;
 }
 
 /** placeInTable: update DOM to place piece into HTML board */
