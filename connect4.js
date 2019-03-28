@@ -95,15 +95,18 @@ function placeInTable(y, x) {
 
 function endGame(msg) {
   // TODO: pop up alert message
-  alert(msg)
+  setTimeout(function (){
+    alert(msg);
+  }, 300);  
 
 }
 
 function resetGame() {
-  makeBoard();
-  clearBoard()
-  makeHtmlBoard();
-
+  setTimeout(function(){
+    makeBoard();
+    clearBoard()
+    makeHtmlBoard();
+  }, 300);  
 }
 
 function clearBoard() {
