@@ -22,6 +22,14 @@ td {
 
 /* TODO: make pieces red/blue,  depending on player 1/2 piece */
 
+.playerOne {
+  background-color: red;
+}
+
+.playerTwo {
+  background-color: blue;
+}
+
 /* column-top is table row of clickable areas for each column */
 
 /* TODO: make column-top row lighter and provide hover effect */
