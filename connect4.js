@@ -72,6 +72,16 @@ function findSpotForCol(x) {
 
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
+  const piece = document.createElement("div");
+
+  if(currPlayer === 1){
+    piece.setAttribute("class", "piece playerOne");
+  } else {
+    piece.setAttribute("class", "piece playerTwo");
+  }
+
+  const td = document.getElementById(`${y}-${x}`);
+  td.appendChild(piece);
 }
 
 /** endGame: announce game end */
@@ -144,3 +154,4 @@ function checkForWin() {
 
 makeBoard();
 makeHtmlBoard();
+console.log(placeInTable(1, 1));
