@@ -20,6 +20,10 @@ td {
 
 }
 
+.center {
+  text-align: center
+}
+
 /* DONE - TODO: make pieces red/blue,  depending on player 1/2 piece */
 
 .playerOne {

@@ -140,7 +140,7 @@ function handleClick(evt) {
   // TODO: check if all cells in board are filled; if so call, call endGame
 
   const boardIsFilled = board.every(row => {
-    row.every(cell => {
+    return row.every(cell => {
       //not null means its filled. 
       return cell !== null
     })
@@ -182,13 +182,23 @@ function checkForWin() {
 
   // TODO: read and understand this code. Add comments to help you.
 
+  //loop through each cell in the board
   for (var y = 0; y < HEIGHT; y++) {
     for (var x = 0; x < WIDTH; x++) {
+
+      //get horrizontal
       var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+
+      //get vertical
       var vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+
+      //get diag
       var diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+
+      //get diagDR
       var diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
+      //check winning conditions
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
         return true;
       }
