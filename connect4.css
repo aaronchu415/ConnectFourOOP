@@ -30,6 +30,30 @@ td {
   background-color: blue;
 }
 
+.col-centered {
+  float: none;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#game {
+  margin-top:400px;
+}
+
+
 /* column-top is table row of clickable areas for each column */
 
 /* TODO: make column-top row lighter and provide hover effect */
+
+td {
+  background-color:bisque;
+}
+
+#column-top td{
+  background-color:goldenrod
+}
+
+#column-top td:hover {
+  background-color: blanchedalmond;
+  cursor: pointer;
+}
