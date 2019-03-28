@@ -64,7 +64,7 @@ function makeHtmlBoard() {
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
-function findSpotForCol(x) {
+function findSpotForCol(board, x, HEIGHT) {
   // TODO: write the real version of this, rather than always returning 0
   // looks for null from bottom, if greater than height, then return null
   for (var i = HEIGHT - 1; i >= 0; i--) {
@@ -122,7 +122,7 @@ function handleClick(evt) {
   var x = +evt.target.id;
 
   // get next spot in column (if none, ignore click)
-  var y = findSpotForCol(x);
+  var y = findSpotForCol(board, x, HEIGHT);
   if (y === null) {
     return;
   }
@@ -152,7 +152,7 @@ function handleClick(evt) {
   }
 
   // check for win
-  if (checkForWin()) {
+  if (checkForWin(board, currPlayer, HEIGHT, WIDTH)) {
     endGame(`Player ${currPlayer} won!`);
     return resetGame()
   }
@@ -164,7 +164,7 @@ function handleClick(evt) {
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
 
-function checkForWin() {
+function checkForWin(board, currPlayer, HEIGHT, WIDTH) {
   function _win(cells) {
     // Check four cells to see if they're all color of current player
     //  - cells: list of four (y, x) cells
