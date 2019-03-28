@@ -74,7 +74,7 @@ function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
   const piece = document.createElement("div");
 
-  if(currPlayer === 1){
+  if (currPlayer === 1) {
     piece.setAttribute("class", "piece playerOne");
   } else {
     piece.setAttribute("class", "piece playerTwo");
@@ -102,6 +102,18 @@ function handleClick(evt) {
     return;
   }
 
+
+  //update board variable with player #
+  board[y][x] = currPlayer
+
+  //check to see if entire board is filled
+  const boardIsFilled = board.every(row => {
+    row.every(cell => {
+      //not nulll means its filled. 
+      return cell !== null
+    })
+  })
+
   // place piece in board and add to HTML table
   // TODO: add line to update in-memory board
   placeInTable(y, x);
@@ -116,6 +128,7 @@ function handleClick(evt) {
 
   // switch players
   // TODO: switch currPlayer 1 <-> 2
+  currPlayer = currPlayer === 1 ? 2 : 1
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -154,4 +167,3 @@ function checkForWin() {
 
 makeBoard();
 makeHtmlBoard();
-console.log(placeInTable(1, 1));
