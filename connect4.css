@@ -17,7 +17,18 @@ td {
   width: 80%;
   height: 80%;
 
+  position: absolute;
+  top:0px;
 
+  animation-name: falling;
+  animation-duration: 2s;
+
+}
+
+/* Standard syntax */
+@keyframes falling {
+  from {top:-200px;}
+  to {top:0px;}
 }
 
 .center {
@@ -51,6 +62,7 @@ td {
 
 td {
   background-color:bisque;
+  position: relative;
 }
 
 #column-top td{
