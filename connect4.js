@@ -5,8 +5,8 @@
  * board fills (tie)
  */
 
-var WIDTH = 7;
-var HEIGHT = 6;
+const WIDTH = 7;
+const HEIGHT = 6;
 
 var currPlayer = 1; // active player: 1 or 2
 var board = []; // array of rows, each row is array of cells  (board[y][x])
@@ -17,12 +17,21 @@ var board = []; // array of rows, each row is array of cells  (board[y][x])
 
 function makeBoard() {
   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
+
+  for (let y = 0; y < HEIGHT; y++) {
+    let row = []
+    for (let x = 0; x < WIDTH; x++) {
+      row.push(null)
+    }
+    board.push(row)
+  }
+
 }
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
 function makeHtmlBoard() {
-  // TODO: get "board" variable from the item in HTML w/ID of "board"
+  // DONE - TODO: get "board" variable from the item in HTML w/ID of "board"
   let board = document.getElementById('board');
 
   // TODO: add comment for this code
@@ -53,6 +62,7 @@ function makeHtmlBoard() {
 
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
+
   return 0;
 }
 
