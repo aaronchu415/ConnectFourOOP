@@ -18,6 +18,8 @@ var board = []; // array of rows, each row is array of cells  (board[y][x])
 function makeBoard() {
   // DONE - TODO: set "board" to empty HEIGHT x WIDTH matrix array
 
+  board = []
+
   for (let y = 0; y < HEIGHT; y++) {
     let row = []
     for (let x = 0; x < WIDTH; x++) {
@@ -65,10 +67,10 @@ function makeHtmlBoard() {
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
   // looks for null from bottom, if greater than height, then return null
-  for(var i = HEIGHT - 1; i >= 0; i--) {
-    if(board[i][x] === null) {
+  for (var i = HEIGHT - 1; i >= 0; i--) {
+    if (board[i][x] === null) {
       return i;
-    } 
+    }
   }
   return null;
 }
@@ -93,6 +95,22 @@ function placeInTable(y, x) {
 
 function endGame(msg) {
   // TODO: pop up alert message
+  alert(msg)
+
+}
+
+function resetGame() {
+  makeBoard();
+  clearBoard()
+  makeHtmlBoard();
+
+}
+
+function clearBoard() {
+  var myNode = document.getElementById("board");
+  while (myNode.firstChild) {
+    myNode.removeChild(myNode.firstChild);
+  }
 }
 
 /** handleClick: handle click of column top to play piece */
@@ -111,13 +129,6 @@ function handleClick(evt) {
   //update board variable with player #
   board[y][x] = currPlayer
 
-  //check to see if entire board is filled
-  const boardIsFilled = board.every(row => {
-    row.every(cell => {
-      //not nulll means its filled. 
-      return cell !== null
-    })
-  })
 
   // place piece in board and add to HTML table
   // TODO: add line to update in-memory board
@@ -126,9 +137,22 @@ function handleClick(evt) {
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
 
+  const boardIsFilled = board.every(row => {
+    row.every(cell => {
+      //not null means its filled. 
+      return cell !== null
+    })
+  })
+
+  if (boardIsFilled) {
+    endGame('Tie Game')
+    return resetGame()
+  }
+
   // check for win
   if (checkForWin()) {
-    return endGame(`Player ${currPlayer} won!`);
+    endGame(`Player ${currPlayer} won!`);
+    return resetGame()
   }
 
   // switch players
