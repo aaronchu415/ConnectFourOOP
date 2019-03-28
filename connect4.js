@@ -35,6 +35,9 @@ function makeBoard() {
 function makeHtmlBoard() {
   // DONE - TODO: get "board" variable from the item in HTML w/ID of "board"
   let board = document.getElementById('board');
+  if(board === null){
+    return;
+  }
 
   // TODO: add comment for this code
   // creates top row with id x
@@ -138,13 +141,13 @@ function handleClick(evt) {
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
-
-  const boardIsFilled = board.every(row => {
-    return row.every(cell => {
-      //not null means its filled. 
-      return cell !== null
-    })
-  })
+  let boardIsFilled = checkBoardIsFilled(board);
+  // const boardIsFilled = board.every(row => {
+  //   return row.every(cell => {
+  //     //not null means its filled. 
+  //     return cell !== null
+  //   })
+  // })
 
   if (boardIsFilled) {
     endGame('Tie Game')
@@ -160,6 +163,15 @@ function handleClick(evt) {
   // switch players
   // TODO: switch currPlayer 1 <-> 2
   currPlayer = currPlayer === 1 ? 2 : 1
+}
+
+function checkBoardIsFilled(board){
+  return board.every(row => {
+      return row.every(cell => {
+        //not null means its filled. 
+        return cell !== null
+      })
+    })  
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -205,6 +217,7 @@ function checkForWin(board, currPlayer, HEIGHT, WIDTH) {
     }
   }
 }
-
-makeBoard();
-makeHtmlBoard();
+// document.addEventListener("DOMContentLoaded", function(){
+  makeBoard();
+  makeHtmlBoard();  
+// })
