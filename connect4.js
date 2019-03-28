@@ -35,6 +35,7 @@ function makeHtmlBoard() {
   let board = document.getElementById('board');
 
   // TODO: add comment for this code
+  // creates top row with id x
   var top = document.createElement("tr");
   top.setAttribute("id", "column-top");
   top.addEventListener("click", handleClick);
@@ -47,6 +48,7 @@ function makeHtmlBoard() {
   board.append(top);
 
   // TODO: add comment for this code
+  // creates rows below top row w/ id = 'y-x' for coordinates on board
   for (var y = 0; y < HEIGHT; y++) {
     const row = document.createElement("tr");
     for (var x = 0; x < WIDTH; x++) {
