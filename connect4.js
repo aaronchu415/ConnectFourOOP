@@ -23,6 +23,7 @@ function makeBoard() {
 
 function makeHtmlBoard() {
   // TODO: get "board" variable from the item in HTML w/ID of "board"
+  let board = document.getElementById('board');
 
   // TODO: add comment for this code
   var top = document.createElement("tr");
@@ -104,12 +105,12 @@ function checkForWin() {
     //  - returns true if all are legal coordinates & all match currPlayer
 
     return cells.every(
-        ([y, x]) =>
-            y >= 0 &&
-            y < HEIGHT &&
-            x >= 0 &&
-            x < WIDTH &&
-            board[y][x] === currPlayer
+      ([y, x]) =>
+        y >= 0 &&
+        y < HEIGHT &&
+        x >= 0 &&
+        x < WIDTH &&
+        board[y][x] === currPlayer
     );
   }
 
