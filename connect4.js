@@ -35,7 +35,7 @@ function makeBoard() {
 function makeHtmlBoard() {
   // DONE - TODO: get "board" variable from the item in HTML w/ID of "board"
   let board = document.getElementById('board');
-  if(board === null){
+  if (board === null) {
     return;
   }
 
@@ -165,13 +165,13 @@ function handleClick(evt) {
   currPlayer = currPlayer === 1 ? 2 : 1
 }
 
-function checkBoardIsFilled(board){
+function checkBoardIsFilled(board) {
   return board.every(row => {
-      return row.every(cell => {
-        //not null means its filled. 
-        return cell !== null
-      })
-    })  
+    return row.every(cell => {
+      //not null means its filled. 
+      return cell !== null
+    })
+  })
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -218,6 +218,37 @@ function checkForWin(board, currPlayer, HEIGHT, WIDTH) {
   }
 }
 // document.addEventListener("DOMContentLoaded", function(){
-  makeBoard();
-  makeHtmlBoard();  
+makeBoard();
+makeHtmlBoard();
 // })
+
+
+setInterval(function () {
+
+  let move = 0
+  if (currPlayer === 1) {
+
+    console.log("winning move is " + findWinningMove(board, 1))
+    console.log("defense move is " + findDefenceMove(board, 1))
+
+    let winningMoves = findWinningMove(board, 1)
+    let defenseMoves = findDefenceMove(board, 1)
+    let moves = winningMoves.concat(defenseMoves)
+
+    if (moves.length === 0) {
+      move = Math.floor(Math.random() * WIDTH)
+
+      while (findSpotForCol(board, move, HEIGHT) === null) {
+        move = Math.floor(Math.random() * WIDTH)
+      }
+      document.getElementById(`${move}`).click()
+    } else {
+      move = moves[0]
+      document.getElementById(`${move}`).click()
+    }
+
+
+  }
+
+
+}, 500);
