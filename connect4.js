@@ -237,11 +237,9 @@ setInterval(function () {
 
     if (moves.length === 0) {
       move = Math.floor(Math.random() * WIDTH)
-
-      while (findSpotForCol(board, move, HEIGHT) === null) {
-        move = Math.floor(Math.random() * WIDTH)
+      if (move !== null) {
+        document.getElementById(`${move}`).click()
       }
-      document.getElementById(`${move}`).click()
     } else {
       move = moves[0]
       document.getElementById(`${move}`).click()
@@ -251,4 +249,4 @@ setInterval(function () {
   }
 
 
-}, 500);
+}, 50);

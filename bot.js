@@ -68,18 +68,21 @@ function findWinningMove(board, currPlayer) {
 
     for (let x = 0; x < board[0].length; x++) {
         let y = findSpotForCol(board, x, board.length)
-        possibleY.push(y)
+        if (y !== null) {
+            possibleY.push(y)
+        }
     }
 
     let winningX = []
 
     for (let i = 0; i < possibleY.length; i++) {
         let copyBoard = JSON.parse(JSON.stringify(board))
+
         copyBoard[possibleY[i]][i] = currPlayer
-        //console.log(copyBoard)
         let isThisMoveAWin = checkForWin(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
         if (isThisMoveAWin)
             winningX.push(i)
+        //console.log(copyBoard)
     }
 
     return winningX
@@ -92,7 +95,9 @@ function findDefenceMove(board, currPlayer) {
 
     for (let x = 0; x < board[0].length; x++) {
         let y = findSpotForCol(board, x, board.length)
-        possibleEnemyY.push(y)
+        if (y !== null) {
+            possibleEnemyY.push(y)
+        }
     }
 
     let blockingX = []
