@@ -5,246 +5,292 @@
  * board fills (tie)
  */
 
-const WIDTH = 7;
-const HEIGHT = 6;
-
-var currPlayer = 1; // active player: 1 or 2
-var board = []; // array of rows, each row is array of cells  (board[y][x])
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
  */
 
-function makeBoard() {
-  // DONE - TODO: set "board" to empty HEIGHT x WIDTH matrix array
 
-  board = []
+class Game {
+  constructor(height, width, players) {
+    this.height = height;
+    this.width = width;
+    this.board = [];
+    this.currPlayer = players[0];
+    this.freezeBoard = false;
 
-  for (let y = 0; y < HEIGHT; y++) {
-    let row = []
-    for (let x = 0; x < WIDTH; x++) {
-      row.push(null)
-    }
-    board.push(row)
+    this.players = players
+
+    this.makeBoard();
+    this.makeHtmlBoard();
   }
 
-}
+  // Method
+  makeBoard() {
+    this.board = [];
 
-/** makeHtmlBoard: make HTML table and row of column tops. */
-
-function makeHtmlBoard() {
-  // DONE - TODO: get "board" variable from the item in HTML w/ID of "board"
-  let board = document.getElementById('board');
-  if (board === null) {
-    return;
-  }
-
-  // TODO: add comment for this code
-  // creates top row with id x
-  var top = document.createElement("tr");
-  top.setAttribute("id", "column-top");
-  top.addEventListener("click", handleClick);
-
-  for (var x = 0; x < WIDTH; x++) {
-    var headCell = document.createElement("td");
-    headCell.setAttribute("id", x);
-    top.append(headCell);
-  }
-  board.append(top);
-
-  // TODO: add comment for this code
-  // creates rows below top row w/ id = 'y-x' for coordinates on board
-  for (var y = 0; y < HEIGHT; y++) {
-    const row = document.createElement("tr");
-    for (var x = 0; x < WIDTH; x++) {
-      const cell = document.createElement("td");
-      cell.setAttribute("id", `${y}-${x}`);
-      row.append(cell);
-    }
-    board.append(row);
-  }
-}
-
-/** findSpotForCol: given column x, return top empty y (null if filled) */
-
-function findSpotForCol(board, x, HEIGHT) {
-  // TODO: write the real version of this, rather than always returning 0
-  // looks for null from bottom, if greater than height, then return null
-  for (var i = HEIGHT - 1; i >= 0; i--) {
-    if (board[i][x] === null) {
-      return i;
+    for (let y = 0; y < this.height; y++) {
+      let row = [];
+      for (let x = 0; x < this.width; x++) {
+        row.push(null);
+      }
+      this.board.push(row);
     }
   }
-  return null;
-}
 
-/** placeInTable: update DOM to place piece into HTML board */
+  makeHtmlBoard() {
+    // DONE - TODO: get "board" variable from the item in HTML w/ID of "board"
+    let board = document.getElementById('board');
+    if (board === null) {
+      return;
+    }
 
-function placeInTable(y, x) {
-  // TODO: make a div and insert into correct table cell
-  const piece = document.createElement("div");
+    // TODO: add comment for this code
+    // creates top row with id x
+    var top = document.createElement("tr");
+    top.setAttribute("id", "column-top");
+    top.addEventListener("click", this.handleClick.bind(this));
 
-  if (currPlayer === 1) {
-    piece.setAttribute("class", "piece playerOne");
-  } else {
-    piece.setAttribute("class", "piece playerTwo");
+    for (var x = 0; x < this.width; x++) {
+      var headCell = document.createElement("td");
+      headCell.setAttribute("id", x);
+      top.append(headCell);
+    }
+    board.append(top);
+
+    // TODO: add comment for this code
+    // creates rows below top row w/ id = 'y-x' for coordinates on board
+    for (var y = 0; y < this.height; y++) {
+      const row = document.createElement("tr");
+      for (var x = 0; x < this.width; x++) {
+        const cell = document.createElement("td");
+        cell.setAttribute("id", `${y}-${x}`);
+        row.append(cell);
+      }
+      board.append(row);
+    }
   }
 
-  const td = document.getElementById(`${y}-${x}`);
-  td.appendChild(piece);
-}
-
-/** endGame: announce game end */
-
-function endGame(msg) {
-  // TODO: pop up alert message
-  setTimeout(function () {
-    alert(msg);
-  }, 300);
-}
-
-function resetGame() {
-  setTimeout(function () {
-    makeBoard();
-    clearBoard()
-    makeHtmlBoard();
-  }, 300);
-}
-
-function clearBoard() {
-  var myNode = document.getElementById("board");
-  while (myNode.firstChild) {
-    myNode.removeChild(myNode.firstChild);
-  }
-}
-
-/** handleClick: handle click of column top to play piece */
-
-function handleClick(evt) {
-  // get x from ID of clicked cell
-  var x = +evt.target.id;
-
-  // get next spot in column (if none, ignore click)
-  var y = findSpotForCol(board, x, HEIGHT);
-  if (y === null) {
-    return;
+  findSpotForCol(board, x, height) {
+    // TODO: write the real version of this, rather than always returning 0
+    // looks for null from bottom, if greater than height, then return null
+    for (var i = height - 1; i >= 0; i--) {
+      if (board[i][x] === null) {
+        return i;
+      }
+    }
+    return null;
   }
 
+  placeInTable(y, x) {
+    // TODO: make a div and insert into correct table cell
+    const piece = document.createElement("div");
 
-  //update board variable with player #
-  board[y][x] = currPlayer
+    if (this.currPlayer.id === 1) {
+      piece.setAttribute("class", `piece playerOne ${this.currPlayer.color.toLowerCase()}`);
+    } else {
+      piece.setAttribute("class", `piece playerTwo ${this.currPlayer.color.toLowerCase()}`);
+    }
 
-
-  // place piece in board and add to HTML table
-  // TODO: add line to update in-memory board
-  placeInTable(y, x);
-
-  // check for tie
-  // TODO: check if all cells in board are filled; if so call, call endGame
-  let boardIsFilled = checkBoardIsFilled(board);
-  // const boardIsFilled = board.every(row => {
-  //   return row.every(cell => {
-  //     //not null means its filled. 
-  //     return cell !== null
-  //   })
-  // })
-
-  if (boardIsFilled) {
-    endGame('Tie Game')
-    return resetGame()
+    const td = document.getElementById(`${y}-${x}`);
+    td.appendChild(piece);
   }
 
-  // check for win
-  if (checkForWin(board, currPlayer, HEIGHT, WIDTH)) {
-    endGame(`Player ${currPlayer} won!`);
-    return resetGame()
+  endGame(msg) {
+    // TODO: pop up alert message
+    this.freezeBoard = true
+
+    setTimeout(function () {
+      alert(msg);
+    }, 300);
   }
 
-  // switch players
-  // TODO: switch currPlayer 1 <-> 2
-  currPlayer = currPlayer === 1 ? 2 : 1
-}
+  resetGame() {
+    //   // setTimeout(function () {
+    //   //   this.makeBoard();
+    //   //   this.clearBoard()
+    //   //   this.makeHtmlBoard();
+    //   // }, 300);
+  }
 
-function checkBoardIsFilled(board) {
-  return board.every(row => {
-    return row.every(cell => {
-      //not null means its filled. 
-      return cell !== null
+  // clearBoard() {
+  //   var myNode = document.getElementById("board");
+  //   while (myNode.firstChild) {
+  //     myNode.removeChild(myNode.firstChild);
+  //   }
+  // }
+
+  handleClick(evt) {
+
+    if (this.freezeBoard === true) {
+      return
+    };
+
+    // get x from ID of clicked cell
+    var x = +evt.target.id;
+
+    // get next spot in column (if none, ignore click)
+    var y = this.findSpotForCol(this.board, x, this.height);
+    if (y === null) {
+      return;
+    }
+
+
+    //update board variable with player #
+    this.board[y][x] = this.currPlayer.id
+
+
+    // place piece in board and add to HTML table
+    // TODO: add line to update in-memory board
+    this.placeInTable(y, x);
+
+    // check for tie
+    // TODO: check if all cells in board are filled; if so call, call endGame
+    let boardIsFilled = this.checkBoardIsFilled(this.board);
+    // const boardIsFilled = board.every(row => {
+    //   return row.every(cell => {
+    //     //not null means its filled. 
+    //     return cell !== null
+    //   })
+    // })
+
+    if (boardIsFilled) {
+      this.endGame('Tie Game')
+      return this.resetGame()
+    }
+
+    // check for win
+    if (this.checkForWin(this.board, this.currPlayer.id, this.height, this.width)) {
+      this.endGame(`Player ${this.currPlayer.id} won!`);
+      return this.resetGame()
+    }
+
+    // switch players
+    // TODO: switch currPlayer 1 <-> 2
+    this.currPlayer = this.currPlayer.id === 1 ? this.players[1] : this.players[0]
+  }
+
+  checkBoardIsFilled(board) {
+    return board.every(row => {
+      return row.every(cell => {
+        //not null means its filled. 
+        return cell !== null
+      })
     })
-  })
-}
-
-/** checkForWin: check board cell-by-cell for "does a win start here?" */
-
-function checkForWin(board, currPlayer, HEIGHT, WIDTH) {
-  function _win(cells) {
-    // Check four cells to see if they're all color of current player
-    //  - cells: list of four (y, x) cells
-    //  - returns true if all are legal coordinates & all match currPlayer
-
-    return cells.every(
-      ([y, x]) =>
-        y >= 0 &&
-        y < HEIGHT &&
-        x >= 0 &&
-        x < WIDTH &&
-        board[y][x] === currPlayer
-    );
   }
 
-  // TODO: read and understand this code. Add comments to help you.
+  checkForWin(board, currPlayerID, height, width) {
+    function _win(cells) {
+      // Check four cells to see if they're all color of current player
+      //  - cells: list of four (y, x) cells
+      //  - returns true if all are legal coordinates & all match currPlayer
 
-  //loop through each cell in the board
-  for (var y = 0; y < HEIGHT; y++) {
-    for (var x = 0; x < WIDTH; x++) {
+      return cells.every(
+        ([y, x]) =>
+          y >= 0 &&
+          y < height &&
+          x >= 0 &&
+          x < width &&
+          board[y][x] === currPlayerID
+      );
+    }
 
-      //get horrizontal
-      var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+    // TODO: read and understand this code. Add comments to help you.
 
-      //get vertical
-      var vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+    //loop through each cell in the board
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
 
-      //get diag
-      var diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+        //get horrizontal
+        var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
 
-      //get diagDR
-      var diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
+        //get vertical
+        var vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
 
-      //check winning conditions
-      if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
-        return true;
+        //get diag
+        var diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+
+        //get diagDR
+        var diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
+
+        //check winning conditions
+        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+          return true;
+        }
       }
     }
   }
+
 }
-// document.addEventListener("DOMContentLoaded", function(){
-makeBoard();
-makeHtmlBoard();
-// })
+
+var game;
+
+function startGame() {
+
+  //clear html board
+  clearBoard();
+
+  let players = []
+  let playerId = 0
+
+  //get color from form and make player. append player obj to players array
+  var elements = document.querySelectorAll("select");
+  for (var i = 0; i < elements.length; ++i) {
+    var color = elements[i].value;
+    playerId++
+
+    console.log(color, playerId)
+    let player = new Player(color, playerId)
+    players.push(player)
+  }
+
+
+  //create a new game instance
+  game = new Game(6, 7, players);
+
+  function clearBoard() {
+    var myNode = document.getElementById("board");
+    while (myNode.firstChild) {
+      myNode.removeChild(myNode.firstChild);
+    }
+  }
+}
+
+class Player {
+
+  constructor(color, id) {
+    this.color = color
+    this.id = id
+  }
+
+}
+
 
 var count = 0;
 
 setInterval(function () {
 
+  if (game === undefined) {
+    return
+  }
+
   let move = 0
   let moves = []
-  if (currPlayer === 1) {
+  if (game.currPlayer.id === 1) {
 
-    let winningMoves = findWinningMove(board, 1)
-    let defenseMoves = findDefenceMove(board, 1)
-    let futureWinMove = findFutureWinningMove(board, 1)
-    futureWinMove = checkIfMoveWillResultInEnemyWinning(futureWinMove, board)
-    futureWinMove = checkIfMoveWillResultInPincerAttack(futureWinMove, board)
-    let futureDefenseMove = findFutureDefenseMove(board, 1)
-    futureDefenseMove = checkIfMoveWillResultInEnemyWinning(futureDefenseMove, board)
-    futureDefenseMove = checkIfMoveWillResultInPincerAttack(futureDefenseMove, board)
-    let futurePincerMove = findFuturePincerMove(board, 1)
-    futurePincerMove = checkIfMoveWillResultInEnemyWinning(futurePincerMove, board)
-    let pincerDefenseMove = findPincerDefenseMove(board, 1)
-    pincerDefenseMove = checkIfMoveWillResultInEnemyWinning(pincerDefenseMove, board)
-    pincerDefenseMove = checkIfMoveWillResultInPincerAttack(pincerDefenseMove, board)
-
-
+    let winningMoves = findWinningMove(game.board, 1)
+    let defenseMoves = findDefenceMove(game.board, 1)
+    let futureWinMove = findFutureWinningMove(game.board, 1)
+    futureWinMove = checkIfMoveWillResultInEnemyWinning(futureWinMove, game.board)
+    futureWinMove = checkIfMoveWillResultInPincerAttack(futureWinMove, game.board)
+    let futureDefenseMove = findFutureDefenseMove(game.board, 1)
+    futureDefenseMove = checkIfMoveWillResultInEnemyWinning(futureDefenseMove, game.board)
+    futureDefenseMove = checkIfMoveWillResultInPincerAttack(futureDefenseMove, game.board)
+    let futurePincerMove = findFuturePincerMove(game.board, 1)
+    futurePincerMove = checkIfMoveWillResultInEnemyWinning(futurePincerMove, game.board)
+    let pincerDefenseMove = findPincerDefenseMove(game.board, 1)
+    pincerDefenseMove = checkIfMoveWillResultInEnemyWinning(pincerDefenseMove, game.board)
+    pincerDefenseMove = checkIfMoveWillResultInPincerAttack(pincerDefenseMove, game.board)
 
     moves = winningMoves.concat(defenseMoves).concat(futurePincerMove).concat(pincerDefenseMove).concat(futureWinMove).concat(futureDefenseMove)
     console.log("winning move is " + winningMoves)
@@ -256,11 +302,11 @@ setInterval(function () {
     console.log('---------------------')
 
     if (moves.length === 0) {
-      move = Math.floor(Math.random() * (WIDTH - 1))
-      var y = findSpotForCol(board, move, HEIGHT);
+      move = Math.floor(Math.random() * (game.width - 1))
+      var y = findSpotForCol(game.board, move, game.board.length);
       if (y !== null) {
 
-        if (checkIfMoveWillResultInEnemyWinning([move], board).length !== 0 || count > 10) {
+        if ((checkIfMoveWillResultInEnemyWinning([move], game.board).length !== 0 && checkIfMoveWillResultInPincerAttack([move], game.board).length !== 0) || count > 10) {
           document.getElementById(`${move}`).click()
         } else {
           console.log('skipped over current random move of ' + move)
@@ -277,6 +323,5 @@ setInterval(function () {
 
 
   }
-
 
 }, 150);

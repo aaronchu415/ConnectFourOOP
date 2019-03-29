@@ -12,8 +12,32 @@
   <div id="game">
     <div class="col-centered">
       <h1 class='center'>Connect Four</h1>
+      <div class="col-4 col-centered">
+        <form>
+          <div class="form-group">
+            <label for="PlayerOneColor">Player One</label>
+            <select class="form-control" id="PlayerOneColor">
+              <option>Red</option>
+              <option>Orange</option>
+              <option>Pink</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="PlayerOneColor">Player Two</label>
+            <select class="form-control" id="PlayerOneColor">
+              <option>Blue</option>
+              <option>Brown</option>
+              <option>Purple</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class='center'>
+        <button class='center btn btn-primary' type="button" onclick="startGame()">Start Game</button>
+      </div>
     </div>
-    <table class="col-centered" id="board"></table>
+    <table class="col-centered" id="board">
+    </table>
   </div>
 
   <script src="bot.js"></script>

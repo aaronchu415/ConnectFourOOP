@@ -1,8 +1,23 @@
 /* game board table */
 
+html, body {
+  margin: 0;
+  height: 100%;
+  background-image: url("https://img.freepik.com/free-photo/old-wooden-texture-background-vintage_55716-1138.jpg?size=626&ext=jpg");
+  background-color: #cccccc;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+table {
+  margin-top:50px;
+  overflow:hidden
+}
+
 td {
-  width: 50px;
-  height: 50px;
+  width: 75px;
+  height: 75px;
   border: solid 1px black;
 }
 
@@ -27,7 +42,7 @@ td {
 
 /* Standard syntax */
 @keyframes falling {
-  from {top:-200px;}
+  from {top:-20vh;}
   to {top:0px;}
 }
 
@@ -45,6 +60,30 @@ td {
   background-color: blue;
 }
 
+.red {
+  background-color: red;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.pink {
+  background-color: pink;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.brown {
+  background-color: brown;
+}
+
+.purple {
+  background-color: purple;
+}
+
 .col-centered {
   float: none;
   margin-right: auto;
@@ -52,7 +91,7 @@ td {
 }
 
 #game {
-  margin-top:400px;
+  margin-top:20%;
 }
 
 
