@@ -233,10 +233,12 @@ setInterval(function () {
     let defenseMoves = findDefenceMove(board, 1)
     let futureWinMove = findFutureWinningMove(board, 1)
     let futureDefenseMove = findFutureDefenseMove(board, 1)
+    let futurePincerMove = findFuturePincerMove(board, 1)
 
-    moves = winningMoves.concat(defenseMoves).concat(futureWinMove).concat(futureDefenseMove)
+    moves = winningMoves.concat(defenseMoves).concat(futurePincerMove).concat(futureWinMove).concat(futureDefenseMove)
     console.log("winning move is " + winningMoves)
     console.log("defense move is " + defenseMoves)
+    console.log("pincer move is " + futurePincerMove)
     console.log("future winning move is " + futureWinMove)
     console.log("future defense move is " + futureDefenseMove)
 

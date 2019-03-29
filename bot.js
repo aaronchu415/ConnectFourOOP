@@ -7,6 +7,16 @@
 //     [1, 2, 2, 1, 1, 1, 2],
 // ]
 
+// let board = [
+//     [null, null, null, null, null, null, null],
+//     [null, null, null, null, null, null, null],
+//     [null, null, null, null, null, null, null],
+//     [null, null, 2, null, null, null, null],
+//     [null, null, 1, 2, 2, null, null],
+//     [null, 1, 1, 1, 2, 1, null],
+// ]
+
+
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
 function checkForWin(board, currPlayer, HEIGHT, WIDTH) {
@@ -135,6 +145,102 @@ function checkForFutureWin(board, currPlayer, HEIGHT, WIDTH) {
     }
 }
 
+
+function checkForPincerFormation(board, currPlayer, HEIGHT, WIDTH) {
+    function _win(cells) {
+        // Check four cells to see if they're all color of current player
+        //  - cells: list of four (y, x) cells
+        //  - returns true if all are legal coordinates & all match currPlayer
+
+        if (cells === null) {
+            return false
+        }
+
+        let row = cells.map(([y, x]) => {
+            if (!(y >= 0 &&
+                y < HEIGHT &&
+                x >= 0 &&
+                x < WIDTH)) {
+                return 0
+            }
+            if (board[y]) {
+                if (board[y][x]) {
+                    return board[y][x]
+                }
+            }
+            return null
+        })
+
+
+        let formation = [null, currPlayer, currPlayer, currPlayer, null]
+
+        for (let i = 0; i < row.length; i++) {
+            if (row[i] !== formation[i]) {
+                return false
+            }
+        }
+        return true
+
+
+        // let countOne = 0
+        // let countNull = 0
+
+        // for (let i = 0; i < row.length; i++) {
+        //     if (row[i] === currPlayer) {
+        //         countOne++
+        //     }
+
+        //     if (row[i] === null) {
+        //         countNull++
+        //     }
+        // }
+
+        // if (countOne === 3 && countNull === 1) {
+        //     return true
+        // } else {
+        //     return false
+        // }
+    }
+
+    // TODO: read and understand this code. Add comments to help you.
+
+    //loop through each cell in the board
+    for (var y = 0; y < HEIGHT; y++) {
+        for (var x = 0; x < WIDTH; x++) {
+
+            //get horrizontal
+            var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3], [y, x + 4]];
+            if (checkIfBelowIsNotNull(board, horiz) === false) {
+                horiz = null
+            }
+
+            //get vertical
+            var vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x], [y + 4, x]];
+            if (checkIfBelowIsNotNull(board, vert) === false) {
+                vert = null
+            }
+
+            //get diag
+            var diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3], [y + 4, x + 4]];
+            if (checkIfBelowIsNotNull(board, diagDR) === false) {
+                diagDR = null
+            }
+
+            //get diagDR
+            var diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3], [y + 4, x - 4]];
+
+            if (checkIfBelowIsNotNull(board, diagDL) === false) {
+                diagDL = null
+            }
+
+            //check winning conditions
+            if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+                return true;
+            }
+        }
+    }
+}
+
 function checkIfBelowIsNotNull(board, arrOfCords) {
 
     for (let i = 0; i < arrOfCords.length; i++) {
@@ -220,6 +326,33 @@ function findFutureWinningMove(board, currPlayer) {
 
 }
 
+function findFuturePincerMove(board, currPlayer) {
+
+    let possibleY = []
+
+    for (let x = 0; x < board[0].length; x++) {
+        let y = findSpotForCol(board, x, board.length)
+        possibleY.push(y)
+
+    }
+
+    let pincerX = []
+
+    for (let i = 0; i < possibleY.length; i++) {
+        let copyBoard = JSON.parse(JSON.stringify(board))
+
+        if (possibleY[i] !== null) {
+            copyBoard[possibleY[i]][i] = currPlayer
+            let isThisMoveAPincer = checkForPincerFormation(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
+            if (isThisMoveAPincer)
+                pincerX.push(i)
+        }
+    }
+
+    return pincerX
+
+}
+
 function findFutureDefenseMove(board, currPlayer) {
 
     let possibleEnemyY = []
@@ -258,7 +391,6 @@ function findDefenceMove(board, currPlayer) {
     }
 
 
-
     let blockingX = []
 
     for (let i = 0; i < possibleEnemyY.length; i++) {
@@ -292,4 +424,7 @@ function isKillPosition(hypoBoard) {
 // console.log(checkIfBelowIsNotNull(board, [[10, 1]]))
 
 // console.log(findFutureDefenseMove(board, 1))
+
+// console.log(checkForPincerFormation(board, 1, board.length, board[0].length))
+// console.log("pincer move is " + findFuturePincerMove(board, 1))
 
