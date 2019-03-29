@@ -11,9 +11,9 @@
 //     [null, null, null, null, null, null, null],
 //     [null, null, null, null, null, null, null],
 //     [null, null, null, null, null, null, null],
-//     [null, null, 2, null, null, null, null],
-//     [null, null, 1, 2, 2, null, null],
-//     [null, 1, 1, 1, 2, 1, null],
+//     [null, null, 2, 2, 2, null, null],
+//     [null, null, 1, 1, 2, null, null],
+//     [null, 1, 1, 1, 1, null, null],
 // ]
 
 
@@ -353,6 +353,34 @@ function findFuturePincerMove(board, currPlayer) {
 
 }
 
+function findPincerDefenseMove(board, currPlayer) {
+
+    let possibleEnemyY = []
+
+    for (let x = 0; x < board[0].length; x++) {
+        let y = findSpotForCol(board, x, board.length)
+        possibleEnemyY.push(y)
+
+    }
+
+    let blockingX = []
+
+    for (let i = 0; i < possibleEnemyY.length; i++) {
+        let copyBoard = JSON.parse(JSON.stringify(board))
+
+        let enemyPlayer = currPlayer === 1 ? 2 : 1
+        if (possibleEnemyY[i] !== null) {
+            copyBoard[possibleEnemyY[i]][i] = enemyPlayer
+            let isThisMoveAWin = checkForPincerFormation(copyBoard, enemyPlayer, copyBoard.length, copyBoard[0].length)
+            if (isThisMoveAWin)
+                blockingX.push(i)
+        }
+    }
+
+    return blockingX
+
+}
+
 function findFutureDefenseMove(board, currPlayer) {
 
     let possibleEnemyY = []
@@ -415,6 +443,62 @@ function isKillPosition(hypoBoard) {
 
 }
 
+function checkIfMoveWillResultInEnemyWinning(futureWinMove, board) {
+
+    let output = []
+
+    for (let i = 0; i < futureWinMove.length; i++) {
+        let x = futureWinMove[i]
+        let y = findSpotForCol(board, x, board.length);
+
+        let copyBoard = JSON.parse(JSON.stringify(board))
+
+        //make the move
+        copyBoard[y][x] = 1
+
+        let movesEnemyCanDoToWin = findWinningMove(copyBoard, 2)
+
+        //if moves that enemy can do to win is none then that is a good move
+        if (movesEnemyCanDoToWin.length === 0) {
+            output.push(futureWinMove[i])
+        }
+        else {
+            console.log('removing winning' + futureWinMove[i] + 'prev' + futureWinMove)
+        }
+
+    }
+
+    return output
+}
+
+function checkIfMoveWillResultInPincerAttack(futureWinMove, board) {
+
+    let output = []
+
+    for (let i = 0; i < futureWinMove.length; i++) {
+        let x = futureWinMove[i]
+        let y = findSpotForCol(board, x, board.length);
+
+        let copyBoard = JSON.parse(JSON.stringify(board))
+
+        //make the move
+        copyBoard[y][x] = 1
+
+        let movesEnemyCanDoToPincer = findFuturePincerMove(copyBoard, 2)
+
+        //if moves that enemy can do to win is none then that is a good move
+        if (movesEnemyCanDoToPincer.length === 0) {
+            output.push(futureWinMove[i])
+        }
+        else {
+            console.log('removing pincer' + futureWinMove[i] + 'prev' + futureWinMove)
+        }
+
+    }
+
+    return output
+}
+
 // console.log("winning move is " + findWinningMove(board, 1))
 // console.log("defense move is " + findDefenceMove(board, 1))
 // console.log("futureWinning move is " + findFutureWinningMove(board, 1))
@@ -427,4 +511,6 @@ function isKillPosition(hypoBoard) {
 
 // console.log(checkForPincerFormation(board, 1, board.length, board[0].length))
 // console.log("pincer move is " + findFuturePincerMove(board, 1))
+
+// console.log(checkIfMoveWillResultInEnemyWinning([1, 3, 4, 5], board))
 

@@ -222,6 +222,7 @@ makeBoard();
 makeHtmlBoard();
 // })
 
+var count = 0;
 
 setInterval(function () {
 
@@ -232,26 +233,46 @@ setInterval(function () {
     let winningMoves = findWinningMove(board, 1)
     let defenseMoves = findDefenceMove(board, 1)
     let futureWinMove = findFutureWinningMove(board, 1)
+    futureWinMove = checkIfMoveWillResultInEnemyWinning(futureWinMove, board)
+    futureWinMove = checkIfMoveWillResultInPincerAttack(futureWinMove, board)
     let futureDefenseMove = findFutureDefenseMove(board, 1)
+    futureDefenseMove = checkIfMoveWillResultInEnemyWinning(futureDefenseMove, board)
+    futureDefenseMove = checkIfMoveWillResultInPincerAttack(futureDefenseMove, board)
     let futurePincerMove = findFuturePincerMove(board, 1)
+    futurePincerMove = checkIfMoveWillResultInEnemyWinning(futurePincerMove, board)
+    let pincerDefenseMove = findPincerDefenseMove(board, 1)
+    pincerDefenseMove = checkIfMoveWillResultInEnemyWinning(pincerDefenseMove, board)
+    pincerDefenseMove = checkIfMoveWillResultInPincerAttack(pincerDefenseMove, board)
 
-    moves = winningMoves.concat(defenseMoves).concat(futurePincerMove).concat(futureWinMove).concat(futureDefenseMove)
+
+
+    moves = winningMoves.concat(defenseMoves).concat(futurePincerMove).concat(pincerDefenseMove).concat(futureWinMove).concat(futureDefenseMove)
     console.log("winning move is " + winningMoves)
     console.log("defense move is " + defenseMoves)
     console.log("pincer move is " + futurePincerMove)
+    console.log("pincer defence move is " + pincerDefenseMove)
     console.log("future winning move is " + futureWinMove)
     console.log("future defense move is " + futureDefenseMove)
+    console.log('---------------------')
 
     if (moves.length === 0) {
       move = Math.floor(Math.random() * (WIDTH - 1))
       var y = findSpotForCol(board, move, HEIGHT);
       if (y !== null) {
-        document.getElementById(`${move}`).click()
+
+        if (checkIfMoveWillResultInEnemyWinning([move], board).length !== 0 || count > 10) {
+          document.getElementById(`${move}`).click()
+        } else {
+          console.log('skipped over current random move of ' + move)
+          count++
+        }
       }
+
 
     } else {
       move = moves[0]
       document.getElementById(`${move}`).click()
+      count = 0
     }
 
 
