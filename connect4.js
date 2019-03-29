@@ -232,10 +232,13 @@ setInterval(function () {
     let winningMoves = findWinningMove(board, 1)
     let defenseMoves = findDefenceMove(board, 1)
     let futureWinMove = findFutureWinningMove(board, 1)
-    moves = winningMoves.concat(defenseMoves).concat(futureWinMove)
+    let futureDefenseMove = findFutureDefenseMove(board, 1)
+
+    moves = winningMoves.concat(defenseMoves).concat(futureWinMove).concat(futureDefenseMove)
     console.log("winning move is " + winningMoves)
     console.log("defense move is " + defenseMoves)
     console.log("future winning move is " + futureWinMove)
+    console.log("future defense move is " + futureDefenseMove)
 
     if (moves.length === 0) {
       move = Math.floor(Math.random() * (WIDTH - 1))

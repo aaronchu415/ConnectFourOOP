@@ -1,10 +1,10 @@
 // let board = [
-//     [null, null, null, null, null, null, null],
-//     [null, null, null, null, null, null, null],
-//     [null, 2, null, null, null, null, null],
-//     [null, 2, 2, null, null, null, null],
-//     [null, 2, 2, 2, null, null, null],
-//     [null, 1, 1, null, null, null, 1],
+//     [2, null, null, null, null, null, null],
+//     [2, null, null, null, null, null, null],
+//     [2, null, 2, null, null, null, null],
+//     [1, null, 2, null, null, null, null],
+//     [1, 2, 1, null, null, null, 2],
+//     [1, 2, 2, 1, 1, 1, 2],
 // ]
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
@@ -171,9 +171,8 @@ function findWinningMove(board, currPlayer) {
 
     for (let x = 0; x < board[0].length; x++) {
         let y = findSpotForCol(board, x, board.length)
-        if (y !== null) {
-            possibleY.push(y)
-        }
+        possibleY.push(y)
+
     }
 
     let winningX = []
@@ -181,11 +180,13 @@ function findWinningMove(board, currPlayer) {
     for (let i = 0; i < possibleY.length; i++) {
         let copyBoard = JSON.parse(JSON.stringify(board))
 
-        copyBoard[possibleY[i]][i] = currPlayer
-        let isThisMoveAWin = checkForWin(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
-        if (isThisMoveAWin)
-            winningX.push(i)
-        //console.log(copyBoard)
+        if (possibleY[i] !== null) {
+            copyBoard[possibleY[i]][i] = currPlayer
+            let isThisMoveAWin = checkForWin(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
+            if (isThisMoveAWin)
+                winningX.push(i)
+            //console.log(copyBoard)
+        }
     }
 
     return winningX
@@ -198,9 +199,8 @@ function findFutureWinningMove(board, currPlayer) {
 
     for (let x = 0; x < board[0].length; x++) {
         let y = findSpotForCol(board, x, board.length)
-        if (y !== null) {
-            possibleY.push(y)
-        }
+        possibleY.push(y)
+
     }
 
     let winningX = []
@@ -208,14 +208,43 @@ function findFutureWinningMove(board, currPlayer) {
     for (let i = 0; i < possibleY.length; i++) {
         let copyBoard = JSON.parse(JSON.stringify(board))
 
-        copyBoard[possibleY[i]][i] = currPlayer
-        let isThisMoveAWin = checkForFutureWin(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
-        if (isThisMoveAWin)
-            winningX.push(i)
-        //console.log(copyBoard)
+        if (possibleY[i] !== null) {
+            copyBoard[possibleY[i]][i] = currPlayer
+            let isThisMoveAWin = checkForFutureWin(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
+            if (isThisMoveAWin)
+                winningX.push(i)
+        }
     }
 
     return winningX
+
+}
+
+function findFutureDefenseMove(board, currPlayer) {
+
+    let possibleEnemyY = []
+
+    for (let x = 0; x < board[0].length; x++) {
+        let y = findSpotForCol(board, x, board.length)
+        possibleEnemyY.push(y)
+
+    }
+
+    let blockingX = []
+
+    for (let i = 0; i < possibleEnemyY.length; i++) {
+        let copyBoard = JSON.parse(JSON.stringify(board))
+
+        let enemyPlayer = currPlayer === 1 ? 2 : 1
+        if (possibleEnemyY[i] !== null) {
+            copyBoard[possibleEnemyY[i]][i] = enemyPlayer
+            let isThisMoveAWin = checkForFutureWin(copyBoard, enemyPlayer, copyBoard.length, copyBoard[0].length)
+            if (isThisMoveAWin)
+                blockingX.push(i)
+        }
+    }
+
+    return blockingX
 
 }
 
@@ -225,21 +254,24 @@ function findDefenceMove(board, currPlayer) {
 
     for (let x = 0; x < board[0].length; x++) {
         let y = findSpotForCol(board, x, board.length)
-        if (y !== null) {
-            possibleEnemyY.push(y)
-        }
+        possibleEnemyY.push(y)
     }
+
+
 
     let blockingX = []
 
     for (let i = 0; i < possibleEnemyY.length; i++) {
         let copyBoard = JSON.parse(JSON.stringify(board))
+
         let enemyPlayer = currPlayer === 1 ? 2 : 1
-        copyBoard[possibleEnemyY[i]][i] = enemyPlayer
-        //console.log(copyBoard)
-        let isThisMoveAWinForEnemy = checkForWin(copyBoard, enemyPlayer, copyBoard.length, copyBoard[0].length)
-        if (isThisMoveAWinForEnemy)
-            blockingX.push(i)
+        if (possibleEnemyY[i] !== null) {
+            copyBoard[possibleEnemyY[i]][i] = enemyPlayer
+            //console.log(copyBoard)
+            let isThisMoveAWinForEnemy = checkForWin(copyBoard, enemyPlayer, copyBoard.length, copyBoard[0].length)
+            if (isThisMoveAWinForEnemy)
+                blockingX.push(i)
+        }
     }
 
     return blockingX
@@ -258,4 +290,6 @@ function isKillPosition(hypoBoard) {
 // console.log(checkForFutureWin(board, 1, board.length, board[0].length))
 
 // console.log(checkIfBelowIsNotNull(board, [[10, 1]]))
+
+// console.log(findFutureDefenseMove(board, 1))
 
