@@ -4,7 +4,7 @@
 //     [null, 2, null, null, null, null, null],
 //     [null, 2, 2, null, null, null, null],
 //     [null, 2, 2, 2, null, null, null],
-//     [null, 1, 1, 1, null, null, 1],
+//     [null, 1, 1, null, null, null, 1],
 // ]
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
@@ -51,6 +51,109 @@ function checkForWin(board, currPlayer, HEIGHT, WIDTH) {
     }
 }
 
+function checkForFutureWin(board, currPlayer, HEIGHT, WIDTH) {
+    function _win(cells) {
+        // Check four cells to see if they're all color of current player
+        //  - cells: list of four (y, x) cells
+        //  - returns true if all are legal coordinates & all match currPlayer
+
+        if (cells === null) {
+            return false
+        }
+
+        let row = cells.map(([y, x]) => {
+            if (!(y >= 0 &&
+                y < HEIGHT &&
+                x >= 0 &&
+                x < WIDTH)) {
+                return 0
+            }
+            if (board[y]) {
+                if (board[y][x]) {
+                    return board[y][x]
+                }
+            }
+            return null
+        })
+
+        let countOne = 0
+        let countNull = 0
+
+        for (let i = 0; i < row.length; i++) {
+            if (row[i] === currPlayer) {
+                countOne++
+            }
+
+            if (row[i] === null) {
+                countNull++
+            }
+        }
+
+        if (countOne === 3 && countNull === 1) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    // TODO: read and understand this code. Add comments to help you.
+
+    //loop through each cell in the board
+    for (var y = 0; y < HEIGHT; y++) {
+        for (var x = 0; x < WIDTH; x++) {
+
+            //get horrizontal
+            var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+            if (checkIfBelowIsNotNull(board, horiz) === false) {
+                horiz = null
+            }
+
+            //get vertical
+            var vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+            if (checkIfBelowIsNotNull(board, vert) === false) {
+                vert = null
+            }
+
+            //get diag
+            var diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+            if (checkIfBelowIsNotNull(board, diagDR) === false) {
+                diagDR = null
+            }
+
+            //get diagDR
+            var diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
+
+            if (checkIfBelowIsNotNull(board, diagDL) === false) {
+                diagDL = null
+            }
+
+            //check winning conditions
+            if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+                return true;
+            }
+        }
+    }
+}
+
+function checkIfBelowIsNotNull(board, arrOfCords) {
+
+    for (let i = 0; i < arrOfCords.length; i++) {
+        let [y, x] = arrOfCords[i]
+
+        for (let j = board.length - 1; j > y; j--) {
+
+            let cell = board[j][x]
+            if (cell === null) {
+                return false
+            }
+
+        }
+    }
+
+    return true
+
+}
+
 function findSpotForCol(board, x, HEIGHT) {
     // TODO: write the real version of this, rather than always returning 0
     // looks for null from bottom, if greater than height, then return null
@@ -80,6 +183,33 @@ function findWinningMove(board, currPlayer) {
 
         copyBoard[possibleY[i]][i] = currPlayer
         let isThisMoveAWin = checkForWin(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
+        if (isThisMoveAWin)
+            winningX.push(i)
+        //console.log(copyBoard)
+    }
+
+    return winningX
+
+}
+
+function findFutureWinningMove(board, currPlayer) {
+
+    let possibleY = []
+
+    for (let x = 0; x < board[0].length; x++) {
+        let y = findSpotForCol(board, x, board.length)
+        if (y !== null) {
+            possibleY.push(y)
+        }
+    }
+
+    let winningX = []
+
+    for (let i = 0; i < possibleY.length; i++) {
+        let copyBoard = JSON.parse(JSON.stringify(board))
+
+        copyBoard[possibleY[i]][i] = currPlayer
+        let isThisMoveAWin = checkForFutureWin(copyBoard, currPlayer, copyBoard.length, copyBoard[0].length)
         if (isThisMoveAWin)
             winningX.push(i)
         //console.log(copyBoard)
@@ -123,4 +253,9 @@ function isKillPosition(hypoBoard) {
 
 // console.log("winning move is " + findWinningMove(board, 1))
 // console.log("defense move is " + findDefenceMove(board, 1))
+// console.log("futureWinning move is " + findFutureWinningMove(board, 1))
+
+// console.log(checkForFutureWin(board, 1, board.length, board[0].length))
+
+// console.log(checkIfBelowIsNotNull(board, [[10, 1]]))
 

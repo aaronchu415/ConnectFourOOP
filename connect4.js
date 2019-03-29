@@ -226,20 +226,24 @@ makeHtmlBoard();
 setInterval(function () {
 
   let move = 0
+  let moves = []
   if (currPlayer === 1) {
-
-    console.log("winning move is " + findWinningMove(board, 1))
-    console.log("defense move is " + findDefenceMove(board, 1))
 
     let winningMoves = findWinningMove(board, 1)
     let defenseMoves = findDefenceMove(board, 1)
-    let moves = winningMoves.concat(defenseMoves)
+    let futureWinMove = findFutureWinningMove(board, 1)
+    moves = winningMoves.concat(defenseMoves).concat(futureWinMove)
+    console.log("winning move is " + winningMoves)
+    console.log("defense move is " + defenseMoves)
+    console.log("future winning move is " + futureWinMove)
 
     if (moves.length === 0) {
-      move = Math.floor(Math.random() * WIDTH)
-      if (move !== null) {
+      move = Math.floor(Math.random() * (WIDTH - 1))
+      var y = findSpotForCol(board, move, HEIGHT);
+      if (y !== null) {
         document.getElementById(`${move}`).click()
       }
+
     } else {
       move = moves[0]
       document.getElementById(`${move}`).click()
@@ -249,4 +253,4 @@ setInterval(function () {
   }
 
 
-}, 50);
+}, 150);
